@@ -58,7 +58,7 @@ class Solver(object):
             r_count += 1
             c_count = 0
             for c in range(9):
-                s += str(self.board[r][c]) + ' '
+                s += str(self.board[r][c]) + ' ' if self.board[r][c] else '  '
                 c_count += 1
 
                 if c_count % 3 == 0:
