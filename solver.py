@@ -3,35 +3,37 @@ import collections
 class Solver(object):
     def __init__(self, board):
         self.board = board
-        self.rows = collections.defaultdict(set)
-        self.cols = collections.defaultdict(set)
-        self.squares = collections.defaultdict(set)
-        self.empty = []
+        self.solutions = 0
+        self.__rows = collections.defaultdict(set)
+        self.__cols = collections.defaultdict(set)
+        self.__squares = collections.defaultdict(set)
+        self.__empty = []
 
-    def backtrack(self):
-        if len(self.empty) == 0: 
+    def __backtrack(self):
+        if len(self.__empty) == 0: 
+            self.solutions += 1
             return True
 
-        r, c = self.empty[-1]
+        r, c = self.__empty[-1]
 
         for num in range(1, 10):
-            if (num in self.rows[r] or
-                num in self.cols[c] or
-                num in self.squares[r // 3, c // 3]): continue
+            if (num in self.__rows[r] or
+                num in self.__cols[c] or
+                num in self.__squares[r // 3, c // 3]): continue
             
             self.board[r][c] = num
-            self.rows[r].add(num)
-            self.cols[c].add(num)
-            self.squares[r // 3, c // 3].add(num)
-            self.empty.pop()
+            self.__rows[r].add(num)
+            self.__cols[c].add(num)
+            self.__squares[r // 3, c // 3].add(num)
+            self.__empty.pop()
 
-            if self.backtrack(): return True
+            if self.__backtrack(): return True
 
             self.board[r][c] = 0
-            self.rows[r].remove(num)
-            self.cols[c].remove(num)
-            self.squares[r // 3, c // 3].remove(num)
-            self.empty.append((r, c))
+            self.__rows[r].remove(num)
+            self.__cols[c].remove(num)
+            self.__squares[r // 3, c // 3].remove(num)
+            self.__empty.append((r, c))
         
         return False
 
@@ -41,31 +43,31 @@ class Solver(object):
                 num = self.board[r][c]
 
                 if num == 0:
-                    self.empty.append((r, c))
+                    self.__empty.append((r, c))
                 else:
-                    self.rows[r].add(num)
-                    self.cols[c].add(num)
-                    self.squares[r // 3, c // 3].add(num)
+                    self.__rows[r].add(num)
+                    self.__cols[c].add(num)
+                    self.__squares[r // 3, c // 3].add(num)
 
-        return self.backtrack()
+        return self.__backtrack()
     
     def print_board(self):
         s = ""
 
-        r_count = 0
+        rows = 0
         for r in range(9):
-            r_count += 1
-            c_count = 0
+            rows += 1
+            cols = 0
             for c in range(9):
                 s += str(self.board[r][c]) + ' ' if self.board[r][c] else '  '
-                c_count += 1
+                cols += 1
 
-                if c_count % 3 == 0:
-                    if c_count == 9:
+                if cols % 3 == 0:
+                    if cols == 9:
                         s += '\n'
                     else:
                         s += '| '
-            if r_count % 3 == 0 and r_count != 9:
+            if rows % 3 == 0 and rows != 9:
                 s += '- - - - - - - - - - -\n'
         
         print(s)
@@ -85,6 +87,7 @@ class Solver(object):
 #     solver.print_board()
 #     solver.solve()
 #     solver.print_board()
+#     print(solver.solutions)
 
 
 # if __name__ == '__main__':
