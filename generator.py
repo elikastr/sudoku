@@ -1,5 +1,4 @@
 import collections
-from random import randint, shuffle
 from solver import Solver
 
 class Generator(Solver):
