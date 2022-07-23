@@ -3,52 +3,51 @@ import collections
 class Solver(object):
     def __init__(self, board):
         self.board = board
+        self.rows = collections.defaultdict(set)
+        self.cols = collections.defaultdict(set)
+        self.squares = collections.defaultdict(set)
+        self.empty = []
+
+    def backtrack(self):
+        if len(self.empty) == 0: 
+            return True
+
+        r, c = self.empty[-1]
+
+        for num in range(1, 10):
+            if (num in self.rows[r] or
+                num in self.cols[c] or
+                num in self.squares[r // 3, c // 3]): continue
+            
+            self.board[r][c] = num
+            self.rows[r].add(num)
+            self.cols[c].add(num)
+            self.squares[r // 3, c // 3].add(num)
+            self.empty.pop()
+
+            if self.backtrack(): return True
+
+            self.board[r][c] = 0
+            self.rows[r].remove(num)
+            self.cols[c].remove(num)
+            self.squares[r // 3, c // 3].remove(num)
+            self.empty.append((r, c))
+        
+        return False
 
     def solve(self):
-        rows = collections.defaultdict(set)
-        cols = collections.defaultdict(set)
-        squares = collections.defaultdict(set)
-        empty = []
-
         for r in range(9):
             for c in range(9):
                 num = self.board[r][c]
 
                 if num == 0:
-                    empty.append((r, c))
+                    self.empty.append((r, c))
                 else:
-                    rows[r].add(num)
-                    cols[c].add(num)
-                    squares[r // 3, c // 3].add(num)
-        
-        def backtrack():
-            if len(empty) == 0: return True
+                    self.rows[r].add(num)
+                    self.cols[c].add(num)
+                    self.squares[r // 3, c // 3].add(num)
 
-            r, c = empty[-1]
-
-            for num in range(1, 10):
-                if (num in rows[r] or
-                    num in cols[c] or
-                    num in squares[r // 3, c // 3]): continue
-                
-                self.board[r][c] = num
-                rows[r].add(num)
-                cols[c].add(num)
-                squares[r // 3, c // 3].add(num)
-                empty.pop()
-
-                if backtrack(): return True
-
-                self.board[r][c] = 0
-                rows[r].remove(num)
-                cols[c].remove(num)
-                squares[r // 3, c // 3].remove(num)
-                empty.append((r, c))
-            
-            return False
-        
-        if not backtrack(): print("No solution\n")
-        else: self.print_board()
+        return self.backtrack()
     
     def print_board(self):
         s = ""
@@ -85,6 +84,8 @@ class Solver(object):
 #     solver = Solver(board)
 #     solver.print_board()
 #     solver.solve()
+#     solver.print_board()
+
 
 # if __name__ == '__main__':
 #     main()
