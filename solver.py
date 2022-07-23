@@ -67,7 +67,7 @@ class Solver(object):
         return self.solutions
 
 
-    def print_board(self):
+    def print_board(self, board=None):
         s = ""
 
         rows = 0
@@ -75,7 +75,10 @@ class Solver(object):
             rows += 1
             cols = 0
             for c in range(9):
-                s += str(self.board[r][c]) + ' ' if self.board[r][c] else '  '
+                if board:
+                    s += str(board[r][c]) + ' ' if board[r][c] else '  '
+                else:
+                    s += str(self.board[r][c]) + ' ' if self.board[r][c] else '  '
                 cols += 1
 
                 if cols % 3 == 0:
