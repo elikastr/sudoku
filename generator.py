@@ -1,5 +1,6 @@
 from solver import Solver
 from random import choice
+from copy import deepcopy
 
 class Generator(Solver):
     def __init__(self):
@@ -9,7 +10,7 @@ class Generator(Solver):
         self.backtrack(random=True)    # randomly fill the board using the backtracking algorithm form Solver
         self.__filled = [(r, c) for c in range(9) for r in range(9)]    # indices of filled cells
 
-        self.solved_board = list(self.board)
+        self.solved_board = deepcopy(self.board)
         self.__remove()
 
     
