@@ -4,10 +4,10 @@ class Solver(object):
     def __init__(self, board):
         self.board = board
         self.solutions = 0
-        self.__rows = collections.defaultdict(set)
-        self.__cols = collections.defaultdict(set)
-        self.__squares = collections.defaultdict(set)
-        self.__empty = []
+        self.__rows = collections.defaultdict(set)     # rows[i] == list of filled digits in row i
+        self.__cols = collections.defaultdict(set)     # cols[i] == list of all filled digits in col i
+        self.__squares = collections.defaultdict(set)  # square[r // 3, c // 3] == list of all filled digits in the square
+        self.__empty = []                              # indices of empty cells
 
         for r in range(9):
             for c in range(9):
@@ -20,6 +20,10 @@ class Solver(object):
                     self.__cols[c].add(num)
                     self.__squares[r // 3, c // 3].add(num)
 
+    # find solution using backtracking algorithm
+    # if solve == True, find 1 solution and fill board
+    # if solve == False, find every possivle solution - 
+    #                    board reverts to starting state
     def __backtrack(self, solve=True):
         if len(self.__empty) == 0: 
             self.solutions += 1
