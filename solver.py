@@ -3,7 +3,6 @@ import collections
 class Solver(object):
     def __init__(self, board):
         self.board = board
-        self.solutions = 0
         self.__rows = collections.defaultdict(set)
         self.__cols = collections.defaultdict(set)
         self.__squares = collections.defaultdict(set)
@@ -11,7 +10,6 @@ class Solver(object):
 
     def __backtrack(self):
         if len(self.__empty) == 0: 
-            self.solutions += 1
             return True
 
         r, c = self.__empty[-1]
@@ -87,7 +85,6 @@ class Solver(object):
 #     solver.print_board()
 #     solver.solve()
 #     solver.print_board()
-#     print(solver.solutions)
 
 
 # if __name__ == '__main__':
