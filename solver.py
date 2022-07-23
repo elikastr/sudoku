@@ -47,7 +47,7 @@ class Solver(object):
             self.__squares[r // 3, c // 3].add(n)
             self.__empty.pop()
 
-            if self.__backtrack(solve, random) and solve: return True
+            if self.backtrack(solve, random) and solve: return True
 
             self.board[r][c] = 0
             self.__rows[r].remove(n)
@@ -59,11 +59,11 @@ class Solver(object):
 
 
     def solve(self):
-        return self.__backtrack()
+        return self.backtrack()
 
 
     def num_solutions(self):
-        self.__backtrack(solve=False)
+        self.backtrack(solve=False)
         return self.solutions
 
 
