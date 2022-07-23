@@ -8,6 +8,8 @@ class Generator(Solver):
 
         self.backtrack(random=True)    # randomly fill the board using the backtracking algorithm form Solver
         self.__filled = [(r, c) for c in range(9) for r in range(9)]    # indices of filled cells
+
+        self.solved_board = list(self.board)
         self.__remove()
 
     
@@ -19,8 +21,7 @@ class Generator(Solver):
             self.board[r][c] = 0
             self.__filled.remove((r, c))
 
-            copy = list(self.board)
-            if Solver(copy).num_solutions() != 1:
+            if Solver(self.board).num_solutions() != 1:
                 self.board[r][c] = temp
                 self.__filled.append((r, c))
                 n -= 1
