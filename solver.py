@@ -27,7 +27,7 @@ class Solver(object):
     # if solve == False, find every possible solution - 
     #                    board reverts to starting state
     # if random == True, try to fill with numbers in a random order
-    def __backtrack(self, solve=True, random=False):
+    def backtrack(self, solve=True, random=False):
         if len(self.__empty) == 0: 
             self.solutions += 1
             return True
