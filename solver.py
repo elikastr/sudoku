@@ -3,13 +3,26 @@ import collections
 class Solver(object):
     def __init__(self, board):
         self.board = board
+        self.solutions = 0
         self.__rows = collections.defaultdict(set)
         self.__cols = collections.defaultdict(set)
         self.__squares = collections.defaultdict(set)
         self.__empty = []
 
-    def __backtrack(self):
+        for r in range(9):
+            for c in range(9):
+                num = self.board[r][c]
+
+                if num == 0:
+                    self.__empty.append((r, c))
+                else:
+                    self.__rows[r].add(num)
+                    self.__cols[c].add(num)
+                    self.__squares[r // 3, c // 3].add(num)
+
+    def __backtrack(self, solve=True):
         if len(self.__empty) == 0: 
+            self.solutions += 1
             return True
 
         r, c = self.__empty[-1]
@@ -25,7 +38,7 @@ class Solver(object):
             self.__squares[r // 3, c // 3].add(num)
             self.__empty.pop()
 
-            if self.__backtrack(): return True
+            if self.__backtrack(solve) and solve: return True
 
             self.board[r][c] = 0
             self.__rows[r].remove(num)
@@ -36,19 +49,12 @@ class Solver(object):
         return False
 
     def solve(self):
-        for r in range(9):
-            for c in range(9):
-                num = self.board[r][c]
-
-                if num == 0:
-                    self.__empty.append((r, c))
-                else:
-                    self.__rows[r].add(num)
-                    self.__cols[c].add(num)
-                    self.__squares[r // 3, c // 3].add(num)
-
         return self.__backtrack()
-    
+
+    def num_solutions(self):
+        self.__backtrack(solve=False)
+        return self.solutions
+            
     def print_board(self):
         s = ""
 
@@ -82,9 +88,10 @@ class Solver(object):
 #             ,[0,0,0,0,8,0,0,7,9]]
     
 #     solver = Solver(board)
-#     solver.print_board()
+#     # solver.print_board()
 #     solver.solve()
 #     solver.print_board()
+#     # print(solver.solutions)
 
 
 # if __name__ == '__main__':
