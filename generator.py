@@ -1,4 +1,3 @@
-import collections
 from solver import Solver
 
 class Generator(Solver):
