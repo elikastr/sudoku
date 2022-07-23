@@ -1,4 +1,5 @@
 import collections
+from random import shuffle
 
 class Solver(object):
     def __init__(self, board):
@@ -20,45 +21,52 @@ class Solver(object):
                     self.__cols[c].add(num)
                     self.__squares[r // 3, c // 3].add(num)
 
+
     # find solution using backtracking algorithm
     # if solve == True, find 1 solution and fill board
-    # if solve == False, find every possivle solution - 
+    # if solve == False, find every possible solution - 
     #                    board reverts to starting state
-    def __backtrack(self, solve=True):
+    # if random == True, try to fill with numbers in a random order
+    def __backtrack(self, solve=True, random=False):
         if len(self.__empty) == 0: 
             self.solutions += 1
             return True
 
         r, c = self.__empty[-1]
 
-        for num in range(1, 10):
-            if (num in self.__rows[r] or
-                num in self.__cols[c] or
-                num in self.__squares[r // 3, c // 3]): continue
+        nums = [1,2,3,4,5,6,7,8,9]
+        if random: shuffle(nums)
+        for n in nums:
+            if (n in self.__rows[r] or
+                n in self.__cols[c] or
+                n in self.__squares[r // 3, c // 3]): continue
             
-            self.board[r][c] = num
-            self.__rows[r].add(num)
-            self.__cols[c].add(num)
-            self.__squares[r // 3, c // 3].add(num)
+            self.board[r][c] = n
+            self.__rows[r].add(n)
+            self.__cols[c].add(n)
+            self.__squares[r // 3, c // 3].add(n)
             self.__empty.pop()
 
-            if self.__backtrack(solve) and solve: return True
+            if self.__backtrack(solve, random) and solve: return True
 
             self.board[r][c] = 0
-            self.__rows[r].remove(num)
-            self.__cols[c].remove(num)
-            self.__squares[r // 3, c // 3].remove(num)
+            self.__rows[r].remove(n)
+            self.__cols[c].remove(n)
+            self.__squares[r // 3, c // 3].remove(n)
             self.__empty.append((r, c))
         
         return False
 
+
     def solve(self):
         return self.__backtrack()
+
 
     def num_solutions(self):
         self.__backtrack(solve=False)
         return self.solutions
-            
+
+
     def print_board(self):
         s = ""
 
@@ -79,6 +87,7 @@ class Solver(object):
                 s += '- - - - - - - - - - -\n'
         
         print(s)
+
 
 # def main():
 #     board = [[5,3,0,0,7,0,0,0,0]
