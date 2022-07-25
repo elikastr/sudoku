@@ -12,37 +12,70 @@ font = pg.font.SysFont('arial', 35)
 black = pg.Color('black')
 blue = pg.Color('blue')
 white = pg.Color('white')
+red = pg.Color('red')
 
 gen = Generator()
-board = deepcopy(gen.board)
 
 
-def draw_grid():
-    screen.fill(white)
+class Cell(object):
+    def __init__(self, r, c):
+        self.r, self.c = r, c
+        self.val = gen.board[r][c]
 
-    # draw the numbers
-    for r in range(9):
-        for c in range(9):
-            if board[r][c]:
-                if gen.board[r][c]: color = black
-                else: color = blue
+        if self.val: self.text_color = black
+        else: self.text_color = blue
 
-                text = font.render(str(board[r][c]), True, color)
-                screen.blit(text, (r * diff + 40, c * diff + 30))
+    def draw(self, selected=False):
+        x, y = 15 + self.r * diff, 15 + self.c * diff
 
-    # draw the lines
-    for i in range(10):
-        width = 1 if i % 3 else 4
-        pg.draw.line(screen, black, (i * diff + 15, 15), (i * diff + 15, 600), width)
-        pg.draw.line(screen, black, (15, i * diff + 15), (600, i * diff + 15), width)
+        # draw lines
+        width = 5 if selected else 1
+        line_color = red if selected else black
+
+        pg.draw.line(screen, line_color, (x, y), (x + diff, y), width)
+        pg.draw.line(screen, line_color, (x, y + diff), (x + diff, y + diff), width)
+        pg.draw.line(screen, line_color, (x, y), (x, y + diff), width)
+        pg.draw.line(screen, line_color, (x + diff, y), (x + diff, y + diff), width)
+
+        # draw number
+        if self.val == 0: return
+        
+        text = font.render(str(self.val), True, self.text_color)
+        screen.blit(text, (x + 25, y + 15))
 
 
+grid = []
+for r in range(9):
+    row = []
+    for c in range(9):
+        cell = Cell(r, c)
+        row.append(cell)
+    grid.append(row)
+
+
+selected = -1, -1
 while True:
     for event in pg.event.get():
         if event.type == pg.QUIT:
             pg.quit()
-        if event.type == pg.KEYDOWN:
+        if event.type == pg.MOUSEBUTTONDOWN:
             pass
+            # TODO: update selected cell
     
-    draw_grid()
+    # drawing the grid
+    screen.fill(white)
+
+    # draw the bold lines 
+    for i in range(0, 10, 3):
+        pg.draw.line(screen, black, (i * diff + 15, 15), (i * diff + 15, 600), 4)
+        pg.draw.line(screen, black, (15, i * diff + 15), (600, i * diff + 15), 4)
+
+    # draw the cells
+    for r in range(9):
+        for c in range(9):
+            grid[r][c].draw()
+    # draw selected cell
+    if selected[0] >= 0:
+        grid[selected[0]][selected[1]].draw(True)
+
     pg.display.update() 
