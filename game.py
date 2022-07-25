@@ -7,7 +7,7 @@ size = 615, 615
 diff = 65
 
 screen = pg.display.set_mode(size)
-font = pg.font.SysFont(None, 50)
+font = pg.font.SysFont('arial', 35)
 
 black = pg.Color('black')
 blue = pg.Color('blue')
@@ -28,13 +28,13 @@ def draw_grid():
                 else: color = blue
 
                 text = font.render(str(board[r][c]), True, color)
-                screen.blit(text, (r * diff + 38, c * diff + 33))
+                screen.blit(text, (r * diff + 40, c * diff + 30))
 
     # draw the lines
     for i in range(10):
-        width = 1 if i % 3 else 7
-        pg.draw.line(screen, black, (i * diff + 15, 15), (i * diff + 15, size[0] - 15), width)
-        pg.draw.line(screen, black, (15, i * diff + 15), (size[1] - 15, i * diff + 15), width)
+        width = 1 if i % 3 else 4
+        pg.draw.line(screen, black, (i * diff + 15, 15), (i * diff + 15, 600), width)
+        pg.draw.line(screen, black, (15, i * diff + 15), (600, i * diff + 15), width)
 
 
 while True:
