@@ -34,26 +34,30 @@ class Cell(object):
         text = font.render(str(self.val), True, black if self.default else blue)
         screen.blit(text, (self.rect.x + 25, self.rect.y + 15))
 
+    def update_val(self, val):
+        if self.default: return
+        self.val = val
+
 
 class Board(object):
     def __init__(self):
-        self.nums = []
+        self.cells = []
         for r in range(9):
             row = []
             for c in range(9):
                 cell = Cell(r, c)
                 row.append(cell)
-            self.nums.append(row)
+            self.cells.append(row)
 
         self.selected = None
 
     def draw(self):
         for r in range(9):
             for c in range(9):
-                self.nums[r][c].draw()
+                self.cells[r][c].draw()
         if self.selected:
             r, c = self.selected
-            self.nums[r][c].draw(True)
+            self.cells[r][c].draw(True)
 
 
 board = Board()
@@ -63,8 +67,11 @@ while True:
         if event.type == pg.QUIT:
             pg.quit()
         if event.type == pg.MOUSEBUTTONDOWN:
-            pass
-            # TODO: update selected cell
+            # update selected cell
+            pos = pg.mouse.get_pos()
+            x, y = pos[0] // diff, pos[1] // diff
+            if 0 <= x < 9 and 0 <= y < 9:
+                board.selected = x, y
     
     # drawing the grid
     screen.fill(white)
