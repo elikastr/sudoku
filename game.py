@@ -14,6 +14,7 @@ blue = pg.Color('blue')
 white = pg.Color('white')
 red = pg.Color('red')
 cyan = pg.Color('cyan')
+gray = pg.Color('gray')
 
 gen = Generator()
 
@@ -25,7 +26,7 @@ class Cell(object):
         self.default = True if self.val else False
 
     def select(self):
-        pg.draw.rect(screen, cyan, self.rect)
+        pg.draw.rect(screen, gray if self.default else cyan, self.rect)
 
     def draw_number(self):
         if self.val == 0: return
@@ -46,18 +47,22 @@ for r in range(9):
     board.append(row)
 
 
-def draw_numbers():
+def draw():
     for r in range(9):
         for c in range(9):
             board[r][c].draw_number()
 
+    for i in range(10):
+        width = 1 if i % 3 else 4
+        pg.draw.line(screen, black, (i * diff + 15, 15), (i * diff + 15, 600), width)
+        pg.draw.line(screen, black, (15, i * diff + 15), (600, i * diff + 15), width)
+
 
 screen.fill(white)   
-draw_numbers()
+draw()
 
+x, y = -1, -1
 while True:
-    x, y = -1, -1
-
     for event in pg.event.get():
         if event.type == pg.QUIT:
             sys.exit()
@@ -71,37 +76,35 @@ while True:
             if 0 <= x < 9 and 0 <= y < 9:
                 board[x][y].select()  
 
-            draw_numbers()   
+            draw()   
 
-        # if event.type == pg.KEYDOWN and board.selected:
-        #     # update selected cell
-        #     x, y = board.selected
-        #     if event.key == pg.K_BACKSPACE or event.key == pg.K_0:
-        #         val = 0
-        #     if event.key == pg.K_1:
-        #         val = 1
-        #     if event.key == pg.K_2:
-        #         val = 2
-        #     if event.key == pg.K_3:
-        #         val = 3
-        #     if event.key == pg.K_4:
-        #         val = 4
-        #     if event.key == pg.K_5:
-        #         val = 5
-        #     if event.key == pg.K_6:
-        #         val = 6
-        #     if event.key == pg.K_7:
-        #         val = 7
-        #     if event.key == pg.K_8:
-        #         val = 8
-        #     if event.key == pg.K_9:
-        #         val = 9
-        #     board.cells[x][y].update_val(val)
+        if event.type == pg.KEYDOWN and 0 <= x < 9 and 0 <= y < 9:
+            # update selected cell
+            screen.fill(white)
+            board[x][y].select()  
 
-    # draw the grid
-    for i in range(10):
-        width = 1 if i % 3 else 4
-        pg.draw.line(screen, black, (i * diff + 15, 15), (i * diff + 15, 600), width)
-        pg.draw.line(screen, black, (15, i * diff + 15), (600, i * diff + 15), width)
+            if event.key == pg.K_BACKSPACE or event.key == pg.K_0:
+                val = 0
+            if event.key == pg.K_1:
+                val = 1
+            if event.key == pg.K_2:
+                val = 2
+            if event.key == pg.K_3:
+                val = 3
+            if event.key == pg.K_4:
+                val = 4
+            if event.key == pg.K_5:
+                val = 5
+            if event.key == pg.K_6:
+                val = 6
+            if event.key == pg.K_7:
+                val = 7
+            if event.key == pg.K_8:
+                val = 8
+            if event.key == pg.K_9:
+                val = 9
+
+            board[x][y].update_val(val)
+            draw()   
 
     pg.display.update() 
