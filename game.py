@@ -18,29 +18,21 @@ gen = Generator()
 
 class Cell(object):
     def __init__(self, r, c):
-        self.r, self.c = r, c
+        self.rect = pg.Rect((15 + r * diff, 15 + c * diff), (diff, diff))
         self.val = gen.board[r][c]
-
-        if self.val: self.text_color = black
-        else: self.text_color = blue
+        self.default = True if self.val else False
 
     def draw(self, selected=False):
-        x, y = 15 + self.r * diff, 15 + self.c * diff
-
-        # draw lines
         width = 5 if selected else 1
         line_color = red if selected else black
 
-        pg.draw.line(screen, line_color, (x, y), (x + diff, y), width)
-        pg.draw.line(screen, line_color, (x, y + diff), (x + diff, y + diff), width)
-        pg.draw.line(screen, line_color, (x, y), (x, y + diff), width)
-        pg.draw.line(screen, line_color, (x + diff, y), (x + diff, y + diff), width)
+        pg.draw.rect(screen, line_color, self.rect, width)
 
         # draw number
         if self.val == 0: return
         
-        text = font.render(str(self.val), True, self.text_color)
-        screen.blit(text, (x + 25, y + 15))
+        text = font.render(str(self.val), True, black if self.default else blue)
+        screen.blit(text, (self.rect.x + 25, self.rect.y + 15))
 
 
 class Board(object):
