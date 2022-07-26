@@ -66,12 +66,38 @@ while True:
     for event in pg.event.get():
         if event.type == pg.QUIT:
             pg.quit()
+
         if event.type == pg.MOUSEBUTTONDOWN:
-            # update selected cell
+            # select cell
             pos = pg.mouse.get_pos()
             x, y = pos[0] // diff, pos[1] // diff
             if 0 <= x < 9 and 0 <= y < 9:
                 board.selected = x, y
+
+        if event.type == pg.KEYDOWN and board.selected:
+            # update selected cell
+            x, y = board.selected
+            if event.key == pg.K_BACKSPACE or event.key == pg.K_0:
+                val = 0
+            if event.key == pg.K_1:
+                val = 1
+            if event.key == pg.K_2:
+                val = 2
+            if event.key == pg.K_3:
+                val = 3
+            if event.key == pg.K_4:
+                val = 4
+            if event.key == pg.K_5:
+                val = 5
+            if event.key == pg.K_6:
+                val = 6
+            if event.key == pg.K_7:
+                val = 7
+            if event.key == pg.K_8:
+                val = 8
+            if event.key == pg.K_9:
+                val = 9
+            board.cells[x][y].update_val(val)
     
     # drawing the grid
     screen.fill(white)
