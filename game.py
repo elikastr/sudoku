@@ -1,5 +1,4 @@
 import pygame as pg
-from copy import deepcopy
 from generator import Generator
 
 pg.init()
@@ -44,16 +43,29 @@ class Cell(object):
         screen.blit(text, (x + 25, y + 15))
 
 
-grid = []
-for r in range(9):
-    row = []
-    for c in range(9):
-        cell = Cell(r, c)
-        row.append(cell)
-    grid.append(row)
+class Board(object):
+    def __init__(self):
+        self.nums = []
+        for r in range(9):
+            row = []
+            for c in range(9):
+                cell = Cell(r, c)
+                row.append(cell)
+            self.nums.append(row)
+
+        self.selected = None
+
+    def draw(self):
+        for r in range(9):
+            for c in range(9):
+                self.nums[r][c].draw()
+        if self.selected:
+            r, c = self.selected
+            self.nums[r][c].draw(True)
 
 
-selected = -1, -1
+board = Board()
+
 while True:
     for event in pg.event.get():
         if event.type == pg.QUIT:
@@ -70,12 +82,7 @@ while True:
         pg.draw.line(screen, black, (i * diff + 15, 15), (i * diff + 15, 600), 4)
         pg.draw.line(screen, black, (15, i * diff + 15), (600, i * diff + 15), 4)
 
-    # draw the cells
-    for r in range(9):
-        for c in range(9):
-            grid[r][c].draw()
-    # draw selected cell
-    if selected[0] >= 0:
-        grid[selected[0]][selected[1]].draw(True)
+    # draw the grid
+    board.draw()
 
     pg.display.update() 
