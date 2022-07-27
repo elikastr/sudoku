@@ -8,7 +8,7 @@ diff = 65
 
 screen = pg.display.set_mode(size)
 font = pg.font.SysFont('arial', 35)
-small_font = pg.font.SysFont('arial', 25)
+small_font = pg.font.SysFont('arial', 15)
 
 black = pg.Color('black')
 blue = pg.Color('blue')
@@ -25,14 +25,16 @@ class Cell(object):
     def __init__(self, r, c):
         self.rect = pg.Rect((15 + r * diff, 15 + c * diff), (diff, diff))
         self.val = gen.board[r][c]
+        self.solved_val = gen.solved_board[r][c]
         self.default = True if self.val else False
+        self.text_color = black if self.default else blue
 
     def select(self):
         pg.draw.rect(screen, gray if self.default else cyan, self.rect)
 
     def draw_number(self):
         if self.val == 0: return
-        text = font.render(str(self.val), True, black if self.default else blue)
+        text = font.render(str(self.val), True, self.text_color)
         screen.blit(text, (self.rect.x + 25, self.rect.y + 15))
 
     def update_val(self, val):
@@ -59,6 +61,14 @@ def reset():
             board[r][c].reset_val()
 
 
+def new_game():
+    global gen
+    gen = Generator()
+    for r in range(9):
+        for c in range(9):
+            board[r][c] = Cell(r, c)
+
+
 class Button(object):
     def __init__(self, pos, size, text, action):
         self.rect = pg.Rect(pos, size)
@@ -67,10 +77,11 @@ class Button(object):
 
     def draw(self):
         pg.draw.rect(screen, purple, self.rect)
-        screen.blit(self.text, (self.rect.x + 10, self.rect.y + 13))
+        screen.blit(self.text, (self.rect.x + 10, self.rect.y + 8))
 
-reset_button = Button((615, 15), (115, 55), "RESET", reset)
-buttons = [reset_button]
+reset_button = Button((615, 15), (115, 35), "RESET", reset)
+new_game_button = Button((615, 65), (115, 35), "NEW GAME", new_game)
+buttons = [reset_button, new_game_button]
 
 
 def draw():
