@@ -111,13 +111,14 @@ while True:
         if event.type == pg.MOUSEBUTTONDOWN:
             screen.fill(white)
 
-            # select cell
+            # handle cell select event
             pos = pg.mouse.get_pos()
 
             x, y = pos[0] // diff, pos[1] // diff
             if 0 <= x < 9 and 0 <= y < 9:
                 board[x][y].select()  
 
+            # handle button push event
             for button in buttons:
                 if button.rect.collidepoint(pos[0], pos[1]):
                     button.action()
@@ -127,6 +128,7 @@ while True:
         if event.type == pg.KEYDOWN and 0 <= x < 9 and 0 <= y < 9:
             # update selected cell
             screen.fill(white)
+
             board[x][y].select() 
             val = board[x][y].val 
 
