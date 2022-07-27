@@ -84,7 +84,8 @@ def draw():
         pg.draw.line(screen, black, (15, i * diff + 15), (600, i * diff + 15), width)
 
     # buttons
-    reset_button.draw()
+    for button in buttons:
+        button.draw()
 
 
 screen.fill(white)   
