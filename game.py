@@ -7,6 +7,7 @@ size = 745, 615
 diff = 65
 
 screen = pg.display.set_mode(size)
+
 font = pg.font.SysFont('arial', 35)
 small_font = pg.font.SysFont('arial', 15)
 
@@ -17,6 +18,7 @@ red = pg.Color('red')
 cyan = pg.Color('cyan')
 gray = pg.Color('gray')
 purple = pg.Color('purple')
+green = pg.Color('green')
 
 gen = Generator()
 
@@ -24,9 +26,12 @@ gen = Generator()
 class Cell(object):
     def __init__(self, r, c):
         self.rect = pg.Rect((15 + r * diff, 15 + c * diff), (diff, diff))
+
         self.val = gen.board[r][c]
         self.solved_val = gen.solved_board[r][c]
+
         self.default = True if self.val else False
+
         self.text_color = black if self.default else blue
         self.text = font.render(str(self.val), True, self.text_color)
 
@@ -47,8 +52,10 @@ class Cell(object):
         self.val = 0
 
     def check_val(self):
-        if self.val != self.solved_val:
-            self.text = font.render(str(self.val), True, red)
+        if self.default: return
+        color = red if self.val != self.solved_val else green
+
+        self.text = font.render(str(self.val), True, color)
 
 
 board = []
@@ -93,14 +100,17 @@ class Button(object):
 reset_button = Button((615, 15), (115, 35), "RESET", reset)
 new_game_button = Button((615, 65), (115, 35), "NEW GAME", new_game)
 check_button = Button((615, 115), (115, 35), "CHECK", check)
+
 buttons = [reset_button, new_game_button, check_button]
 
 
 def draw():
+    # numbers
     for r in range(9):
         for c in range(9):
             board[r][c].draw_number()
 
+    # grid lines
     for i in range(10):
         width = 1 if i % 3 else 4
         pg.draw.line(screen, black, (i * diff + 15, 15), (i * diff + 15, 600), width)
@@ -115,6 +125,8 @@ screen.fill(white)
 draw()
 
 x, y = -1, -1
+
+# game loop
 while True:
     for event in pg.event.get():
         if event.type == pg.QUIT:
@@ -123,9 +135,9 @@ while True:
         if event.type == pg.MOUSEBUTTONDOWN:
             screen.fill(white)
 
-            # handle cell select event
             pos = pg.mouse.get_pos()
 
+            # handle cell select event
             x, y = pos[0] // diff, pos[1] // diff
             if 0 <= x < 9 and 0 <= y < 9:
                 board[x][y].select()  
