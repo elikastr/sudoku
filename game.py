@@ -28,22 +28,27 @@ class Cell(object):
         self.solved_val = gen.solved_board[r][c]
         self.default = True if self.val else False
         self.text_color = black if self.default else blue
+        self.text = font.render(str(self.val), True, self.text_color)
 
     def select(self):
         pg.draw.rect(screen, gray if self.default else cyan, self.rect)
 
     def draw_number(self):
         if self.val == 0: return
-        text = font.render(str(self.val), True, self.text_color)
-        screen.blit(text, (self.rect.x + 25, self.rect.y + 15))
+        screen.blit(self.text, (self.rect.x + 25, self.rect.y + 15))
 
     def update_val(self, val):
         if self.default: return
         self.val = val
+        self.text = font.render(str(self.val), True, self.text_color)
 
     def reset_val(self):
         if self.default: return
         self.val = 0
+
+    def check_val(self):
+        if self.val != self.solved_val:
+            self.text = font.render(str(self.val), True, red)
 
 
 board = []
@@ -69,6 +74,12 @@ def new_game():
             board[r][c] = Cell(r, c)
 
 
+def check():
+    for r in range(9):
+        for c in range(9):
+            board[r][c].check_val()
+
+
 class Button(object):
     def __init__(self, pos, size, text, action):
         self.rect = pg.Rect(pos, size)
@@ -81,7 +92,8 @@ class Button(object):
 
 reset_button = Button((615, 15), (115, 35), "RESET", reset)
 new_game_button = Button((615, 65), (115, 35), "NEW GAME", new_game)
-buttons = [reset_button, new_game_button]
+check_button = Button((615, 115), (115, 35), "CHECK", check)
+buttons = [reset_button, new_game_button, check_button]
 
 
 def draw():
