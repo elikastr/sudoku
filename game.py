@@ -90,7 +90,7 @@ def check():
 
 
 def backtrack():
-        pg.event.pump()
+        if pg.event.get(pg.QUIT): sys.exit()
 
         if len(solver.empty) == 0: return True
 
@@ -108,7 +108,7 @@ def backtrack():
             board[r][c].select()
             draw()
             pg.display.update() 
-            pg.time.delay(10)
+            pg.time.delay(5)
 
             if backtrack(): return True
 
@@ -122,7 +122,7 @@ def backtrack():
             board[r][c].select()
             draw()
             pg.display.update() 
-            pg.time.delay(10)
+            pg.time.delay(5)
 
 
 solver = Solver(gen.board)
