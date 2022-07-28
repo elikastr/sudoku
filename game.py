@@ -1,5 +1,6 @@
 import sys
 import pygame as pg
+from collections import defaultdict
 from generator import Generator
 
 pg.init()
@@ -74,11 +75,10 @@ def reset():
 
 
 def new_game():
-    global gen
-    gen = Generator()
+    gen.__init__()
     for r in range(9):
         for c in range(9):
-            board[r][c] = Cell(r, c)
+            board[r][c].__init__(r, c)
 
 
 def check():
