@@ -80,7 +80,6 @@ def new_game():
     for r in range(9):
         for c in range(9):
             board[r][c].__init__(r, c)
-    solver.__init__(gen.board)
 
 
 def check():
@@ -89,7 +88,7 @@ def check():
             board[r][c].check_val()
 
 
-def backtrack():
+def backtrack(solver):
         if pg.event.get(pg.QUIT): sys.exit()
 
         if len(solver.empty) == 0: return True
@@ -108,9 +107,8 @@ def backtrack():
             board[r][c].select()
             draw()
             pg.display.update() 
-            pg.time.delay(5)
 
-            if backtrack(): return True
+            if backtrack(solver): return True
 
             board[r][c].reset_val()
             solver.rows[r].remove(n)
@@ -122,13 +120,12 @@ def backtrack():
             board[r][c].select()
             draw()
             pg.display.update() 
-            pg.time.delay(5)
 
 
-solver = Solver(gen.board)
 def solve():
     reset()
-    backtrack()
+    solver = Solver(gen.board)
+    backtrack(solver)
 
 
 class Button(object):
