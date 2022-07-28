@@ -10,8 +10,8 @@ class Solver(object):
         self.squares = collections.defaultdict(set)  # square[r // 3, c // 3] == list of all filled digits in the square
         self.empty = []                              # indices of empty cells
 
-        for r in range(9):
-            for c in range(9):
+        for c in range(9):
+            for r in range(9):
                 num = self.board[r][c]
 
                 if num == 0:

@@ -2,6 +2,7 @@ import sys
 import pygame as pg
 from collections import defaultdict
 from generator import Generator
+from solver import Solver
 
 pg.init()
 size = 745, 615
@@ -87,6 +88,48 @@ def check():
             board[r][c].check_val()
 
 
+def backtrack():
+        pg.event.pump()
+
+        if len(solver.empty) == 0: return True
+
+        r, c = solver.empty[0]
+        for n in range(1, 10):
+            if not solver.valid(r, c, n): continue
+
+            board[r][c].update_val(n)
+            solver.rows[r].add(n)
+            solver.cols[c].add(n)
+            solver.squares[r // 3, c // 3].add(n)
+            solver.empty.pop(0)
+
+            screen.fill(white)
+            board[r][c].select()
+            draw()
+            pg.display.update() 
+            pg.time.delay(20)
+
+            if backtrack(): return True
+
+            board[r][c].reset_val()
+            solver.rows[r].remove(n)
+            solver.cols[c].remove(n)
+            solver.squares[r // 3, c // 3].remove(n)
+            solver.empty.insert(0, (r, c))
+
+            screen.fill(white)
+            board[r][c].select()
+            draw()
+            pg.display.update() 
+            pg.time.delay(20)
+
+
+solver = Solver(gen.board)
+def solve():
+    reset()
+    backtrack()
+
+
 class Button(object):
     def __init__(self, pos, size, text, action):
         self.rect = pg.Rect(pos, size)
@@ -100,8 +143,9 @@ class Button(object):
 reset_button = Button((615, 15), (115, 35), "RESET", reset)
 new_game_button = Button((615, 65), (115, 35), "NEW GAME", new_game)
 check_button = Button((615, 115), (115, 35), "CHECK", check)
+solve_button = Button((615, 165), (115, 35), "SOLVE", solve)
 
-buttons = [reset_button, new_game_button, check_button]
+buttons = [reset_button, new_game_button, check_button, solve_button]
 
 
 def draw():
