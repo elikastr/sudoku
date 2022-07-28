@@ -80,6 +80,7 @@ def new_game():
     for r in range(9):
         for c in range(9):
             board[r][c].__init__(r, c)
+    solver.__init__(gen.board)
 
 
 def check():
