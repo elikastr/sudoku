@@ -108,7 +108,7 @@ def backtrack():
             board[r][c].select()
             draw()
             pg.display.update() 
-            pg.time.delay(20)
+            pg.time.delay(10)
 
             if backtrack(): return True
 
@@ -122,7 +122,7 @@ def backtrack():
             board[r][c].select()
             draw()
             pg.display.update() 
-            pg.time.delay(20)
+            pg.time.delay(10)
 
 
 solver = Solver(gen.board)
